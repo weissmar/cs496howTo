@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>How to Asynchronously Load API Data While Maintaining a Fluid User Experience in iOS</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/scrolling-nav.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand page-scroll" href="#page-top">How to</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a class="page-scroll" href="#page-top"></a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#started">Getting Started</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#services">Services</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Intro Section -->
+    <section id="intro" class="intro-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>How to Asynchronously Load API Data While Maintaining a Fluid User Experience in iOS</h1>
+                    <p>This guide will lead you through the process of creating a list view in iOS using Xcode and Swift, making HTTP GET calls to an API from within the application, using placeholder loading animations from a third party library while the API calls complete asynchronously, and finally loading the data received from the API into the list view. My main concern in writing this guide was to help users who have some basic experience with iOS development maintain a pleasant and fluid user experience when making a large number of API calls that may or may not take a good deal of time to complete. Instead of waiting for all of the calls to complete before loading any data (and thereby introducing a "chunky" loading experience), we will make use of a small third-party library to show the user a loading animation while as the calls complete, as well as load each piece of data as its call finishes.</p>
+                    <p>For the purposes of this guide, I am using the example of a list of items that might be used in a roleplaying game (such as GURPS or D&ampD). If you feel confident using Xcode to develop iOS apps generally, you can use this guide to create a list of your own objects. On the other hand, if you don't have much experience with Xcode and iOS development, I suggest you walk through this guide as it is written. The guide assumes that you have Xcode updated at least to the point where it will support iOS 9.0, and that you have some very basic familiarity with Swift.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="started" class="started-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Getting Started</h1>
+                    <p>To get started, open Xcode and click on "Create a new Xcode project." You'll need to choose a template. For this guide, I chose "Single View Application." (Make sure you select "Application" from below "iOS" in the side menu before selecting a template.)</p>
+                    <img src="images/1_chooseXcodeTemplate.png" alt="Choose template">
+                    <p> Click next to choose options for the project. Enter a Product Name (I chose "LoadingListfromAPIData"), select "Swift" for Language, and select "iPhone" for Devices. The other fields will be auto-filled and don't need to be changed for this project.</p>
+                    <img src="images/2_chooseXcodeOptions.png" alt="Choose options">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Services Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Contact Section</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Scrolling Nav JavaScript -->
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/scrolling-nav.js"></script>
+
+</body>
+
+</html>
