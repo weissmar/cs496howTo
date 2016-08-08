@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>How to Asynchronously Load API Data While Maintaining a Fluid User Experience in iOS</title>
+    <title>How to Asynchronously Load a List of API Data While Maintaining a Fluid User Experience in iOS</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -51,13 +51,19 @@
                         <a class="page-scroll" href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#started">Getting Started</a>
+                        <a class="page-scroll" href="#started">Get Started</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#services">Services</a>
+                        <a class="page-scroll" href="#scenes">Lay Out Your Scenes</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#contact">Contact</a>
+                        <a class="page-scroll" href="#classes">Add Custom Classes</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#navigation">Add Navigation</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="#loading">Get Data and Add Loading Animation</a>
                     </li>
                 </ul>
             </div>
@@ -71,9 +77,9 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>How to Asynchronously Load API Data While Maintaining a Fluid User Experience in iOS</h1>
+                    <h1>How to Asynchronously Load a List of API Data While Maintaining a Fluid User Experience in iOS</h1>
                     <p>This guide will lead you through the process of creating a list view in iOS using Xcode and Swift, making HTTP GET calls to an API from within the application, using placeholder loading animations from a third party library while the API calls complete asynchronously, and finally loading the data received from the API into the list view. My main concern in writing this guide was to help users who have some basic experience with iOS development maintain a pleasant and fluid user experience when making a large number of API calls that may or may not take a good deal of time to complete. Instead of waiting for all of the calls to complete before loading any data (and thereby introducing a "chunky" loading experience), we will make use of a small third-party library to show the user a loading animation while as the calls complete, as well as load each piece of data as its call finishes.</p>
-                    <p>For the purposes of this guide, I am using the example of a list of items that might be used in a roleplaying game (such as GURPS or D&ampD). If you feel confident using Xcode to develop iOS apps generally, you can use this guide to create a list of your own objects. On the other hand, if you don't have much experience with Xcode and iOS development, I suggest you walk through this guide as it is written. The guide assumes that you have Xcode updated at least to the point where it will support iOS 9.0, and that you have some very basic familiarity with Swift.</p>
+                    <p>For the purposes of this guide, I am using the example of a list of items that might be used in a roleplaying game (such as GURPS or D&ampD). If you feel confident using Xcode to develop iOS apps generally, you can use this guide to create a list of your own objects. On the other hand, if you don't have much experience with Xcode and iOS development, I suggest you walk through this guide as it is written. The guide assumes that you have Xcode updated at least to the point where it will support iOS 9.0, and that you have some very basic familiarity with using Xcode and Swift.</p>
                 </div>
             </div>
         </div>
@@ -87,30 +93,137 @@
                     <h1>Getting Started</h1>
                     <p>To get started, open Xcode and click on "Create a new Xcode project." You'll need to choose a template. For this guide, I chose "Single View Application." (Make sure you select "Application" from below "iOS" in the side menu before selecting a template.)</p>
                     <img src="images/1_chooseXcodeTemplate.png" alt="Choose template">
-                    <p> Click next to choose options for the project. Enter a Product Name (I chose "LoadingListfromAPIData"), select "Swift" for Language, and select "iPhone" for Devices. The other fields will be auto-filled and don't need to be changed for this project.</p>
+                    <p>Click next to choose options for the project. Enter a Product Name (I chose "LoadingListfromAPIData"), select "Swift" for Language, and select "iPhone" for Devices. The other fields will be auto-filled and don't need to be changed for this project.</p>
                     <img src="images/2_chooseXcodeOptions.png" alt="Choose options">
+                    <p>Click next to choose the directory to store the project in, and finally click create. This will open your new project to the general settings tab. In the Deployment Info section, select your Deployment Target, which is the lowest iOS version that your app will be able to run on. I set mine to 9.0 for this guide.</p>
+                    <img src="images/4_deploymentInfo.png" alt="Deployment Info">
+                    <p>Next, we need to install the third-party library of loading animations, so go ahead and close Xcode for now. There are a few different ways to install the NVActivityIndicatorView collection. To read their documentation, go <a href="https://github.com/ninjaprox/NVActivityIndicatorView">here</a>. You can use any of the installation methods, although I used Cocoapods. Once you've completed this installation, open your Xcode project back up (if you installed the collection using Cocoapods, be sure to open your project using the .xcworkspace file from now on).</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="services-section">
+    <!-- Scenes Section -->
+    <section id="scenes" class="scenes-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>Services Section</h1>
+                    <h1>Laying Out Your Scenes</h1>
+                    <p>Back in Xcode, select Main.storyboard from the Project navigator.</p>
+                    <img src="images/5_newProject.png" alt="Main.storyboard">
+                    <p>We are going to lay out two scenes for this project: one main page and one list (or table) page. The main page is going to be pretty simple, just a landing page with a button to move to the list page. We'll get this set up first.</p>
+                    <p>In the bottom, right-hand corner of Xcode, select the Object library and search for "button". Click on the Button object and drag it onto the center of the empty view controller.</p>
+                    <img src="images/6_placeButton.png" alt="place button">
+                    <p>Double-click on the button to change the text. I changed mine to "View All Items", since this button will lead to the page that lists all of the items. Next, in the Document Outline, select your newly created button, then click on Align (there's an icon on the bottom-right of the window, just to the left of the Object library). In the pop-up window, check the boxes for Horizontally in Container (with a value of 0) and Vertically in Container (with a value of -200). Set Update Frames to "Items of New Constraints" and then click "add 2 constraints".</p>
+                    <img src="images/8_addButtonConstraints.png" alt="add button constraints">
+                    <p>Now we need to make a connection between the button we've added to the scene and the code that controls the scene. To do this, switch to the Assistant editor (there's an icon in the top-right of the window), which allows us to see the storyboard next to the written code, in this case ViewController.swift. Control-click and drag from the button in the storyboard view to just below the class declaration for ViewController. A pop-up window will appear near where you ended the drag.</p>
+                    <img src="images/9_addButtonOutlet.png" alt="add button outlet">
+                    <p>In the pop-up window, select "Outlet" for the Connection field, and enter a suitable name in the Name field. (I named mine "viewAllItemsButton".) You can leave the other fields as-is and click Connect. This will insert an outlet for that button into your code so you can reference it in the view controller.</p>
+                    <img src="images/10_buttonOutlet.png" alt="button outlet">
+                    <p>Now, switch back to the Standard editor (there's an icon just to the left of the icon for the Assistant editor). We're going to add a second view controller to our storyboard, which will control our second scene.</p>
+                    <p>Go to the object library, search for "table", and click and drag a Table View Controller object onto your storyboard (to the right of the existing view controller). You can zoom out to see the view controllers side by side.</p>
+                    <img src="images/11_viewControllers.png" alt="view controllers side by side">
+                    <p>In the Document outline, select "Table View" (under "Table View Controller"). Then, in the Size inspector (there's an icon below the icons for the Assistant editor and Standard editor), set the Row Height to 120.</p>
+                    <img src="images/12_rowHeightTableView.png" alt="Table View row height">
+                    <p>Next, in the Document outline, select "Table View Cell" (which is under "Table View"). In the Attributes inspector (there's an icon to the left of the icon for the Size inspector), set the Style field to "Custom", the Selection field to "None", and enter a name for the cell into the Identifier field (I called mine "itemCell"). Then, in the Size inspector, set the Row Height field to 120.</p>
+                    <p>Now that we've done some basic set up for the table and cell, we can add some objects to the cell to create our cell prototype. In the Object library, search for "label" and drag three labels onto the cell.</p>
+                    <img src="images/13_threeLabels.png" alt="three labels in cell">
+                    <p>Select the top label and, in the Attributes inspector, change the font size to 25.</p>
+                    <img src="images/14_labelTextSize.png" alt="changing label text size">
+                    <p>Then go to the Size inspector and change the Height field to 30. Drag and resize the length of the labels so they look nice in the cell.</p>
+                    <img src="images/15_threeLabelsLayout.png" alt="three labels layed out">
+                    <p>Now that we've set the basic layout of our two scenes, we need to add a few custom classes to the project.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact-section">
+    <!-- Classes Section -->
+    <section id="classes" class="classes-section">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>Contact Section</h1>
+                    <h1>Adding Custom Classes</h1>
+                    <p>The first custom class that we need to create is a class for the cells in the table. To do this, go to File -> New -> File. In the window that pops up, select Source (under iOS) from the side menu and then select "Cocoa Touch Class" as the template for the new file. Click next to move to the next window.</p>
+                    <img src="images/16_chooseNewFileTemplate.png" alt="choose template for new file">
+                    <p>Name your class something suitable (I went with "ItemTableViewCell") in the Class field. Select "UITableViewCell" for the Subclass of field, and "Swift" for the Language field. Click next to select the directory to place the new file in. It should default to the appropriate location, which is in the same folder as the other .swift files for your project. Click create to create the file.</p>
+                    <img src="images/17_newCellFile.png" alt="new cell file">
+                    <p>Repeat the process to create a class to control the table view. It should also use the "Cocoa Touch Class" template. It will be a Subclass of "UITableViewController" and be named something like "ITemTableViewController".</p>
+                    <img src="images/18_newTableFile.png" alt="new table file">
+                    <p>Now that we've created the files for two custom classes, we need to connect the table view and prototype cell to these classes. In the Document Outline, select "Table View Controller" and, in the Identity inspector (there's an icon to the left of the Attributes inspector), select the class you created in the Class field (my class is "ItemTableViewController").</p>
+                    <img src="images/19_tableCustomClass.png" alt="table custom class">
+                    <p>Go back to the Document outline and select the cell (mine is called "itemCell") and, in the Identity inspector, select the class you created for the cell (mine is "ItemTableViewCell").</p>
+                    <img src="images/20_cellCustomClass.png" alt="cell custom class">
+                    <p>Next, select "Content View" (under "itemCell" or whatever you named your cell) in the Document Outline and switch to the Assistant editor so that you can see your table view next to ItemTableViewCell.swift (or whatever you named your custom cell class).</p>
+                    <img src="images/21_contentViewAndCustomClass.png" alt="content view and custom class">
+                    <p>Below the class declaration, type <code>// MARK: Properties</code>, which is a comment that designates where to find the properties for the class. Control-click and drag from the top label in your cell to just below the comment. In the pop-up window, select "Outlet", type in a name for that label (mine is "nameLabel" because this is where I'll display the name of the item), and click connect.</p>
+                    <img src="images/22_labelOutlet.png" alt="label outlet">
+                    <p>Repeat this process to create outlets for each of the labels. (I named my second label "weightLabel", which will display item weight, and my third label "valueLabel", which will display item value.)</p>
+                    <img src="images/23_threeLabelOutlets.png" alt="three label outlets">
+                    <p>Now we need to create one more custom class. This class will define the data model for the project (in my case, it will define an "Item"). Go to File -> New -> File and, instead of selecting "Cocoa Touch Class", select "Swift File". (We don't need this class to be a subclass of anything, which is why we want just a plain Swift file.) Click next. Now you need to name your file whatever you'd like to call the data object you'll use (in my case, I named it "Item") and then click create. This will create a new file, in my case name "Item.swift", that is mostly empty at this point.</p>
+                    <img src="images/24_itemFile.png" alt="item file">
+                    <p>Change the import statement to read <code>import UIKit</code>. (This includes Foundation, so we don't need to import it separately.) Below the import statement, write your class declaration and class properties. This is the class that we will use to hold the data we get back from the API calls. A red warning icon will appear next to your class name. This isn't anythign to worry about; it's just letting us know that we haven't defined an initializer yet, which we'll do next.</p>
+                    <img src="images/25_itemClass.png" alt="item class">
+                    <p>Add an initializer, including a check for empty required properties.</p>
+                    <img src="images/26_itemInitializer.png" alt="item initializer">
+                    <p>That's all we need to do with this class. In the Project navigator, select your table view controller class (mine is "ItemTableViewController.swift"). In order to store the list of objects that will be displayed in the table, we need to define an array of our data objects (items, in my case). So, below the class declaration, add a variable declaration.</p>
+                    <img src="images/27_arrayItems.png" alt="items array">
+                    <p>There is a good amount of boilerplate code in the class. We'll change some of it and ignore the rest. Find the <code>// MARK: - Table view data source</code> comment.</p>
+                    <img src="images/28_tableViewDataSource.png" alt="Table view data source before">
+                    <p>In the first function under the comment, remove the comment from inside the function and change the return statement to <code>return 1</code>. In the next function, remove the comment and change the return statement to <code>return items.count</code> (or whatever you named your array variable .count). The next function is commented out, but we are going to use it, so remove the comment characters <code>/*</code> and <code>*/</code> before and after the function. We're going to define a constant that holds the identifier we previously assigned to the prototype cell, as the first line of the function body: <code>let cellIdentifier = "itemCell"</code>. Next, we'll change the following line: <code>let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)</code> to read <code>let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier, forIndexPath: indexPath) as! ItemTableViewCell</code>. Finally, we'll add:</p>
+                    <pre><code>let item = items[indexPath.row]
+
+cell.nameLabel.text = item.name
+cell.weightLabel.text = String(format: "%0.2f", item.weight!) + " lb"
+cell.valueLabel.text = "$" + String(format: "%0.2f", item.value!)</code></pre>
+                    <img src="images/29_tableViewDataSourceFilled.png" alt="Table view data source after">
+                    <p>We're done editing our custom classes for the time being, and will move on to adding some navigation between scenes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navigation Section -->
+    <section id="navigation" class="navigation-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Adding Navigation</h1>
+                    <p>In the Project navigator, select Main.storyboard. We're going to add some navigation between our first and second scene. In the Document Outline, select "Item Table View Controller", and then go to Editor -> Embed In -> Navigation Controller.</p>
+                    <img src="images/30_embedInNavigationController.png" alt="embed in navigation controller">
+                    <p>This adds a navigation controller that points to the table scene.</p>
+                    <img src="images/31_threeViews.png" alt="three views">
+                    <p>Double-click on the top of the table scene to insert a title (I called mine "All Items").</p>
+                    <img src="images/32_allItemsTable.png" alt="All Items">
+                    <p>Now we need to connect the first scene to the new navigation controller. Control-click and drag from the button on the first scene (mine is name "View All Items") to anywhere on the navigation controller. Select "Show" from the menu that pops up. </p>
+                    <img src="images/33_showSegue.png" alt="show segue">
+                    <p>This creates a segue from the first scene to the second.</p>
+                    <img src="images/34_threeViewsConnected.png" alt="three views connected">
+                    <p>Next, we'll add a navigation controller to the first scene. In the Document Outline, select "View Controller" and then go to Editor -> Embed In -> Navigation Controller. This adds a navigation controller that points to the first scene. Double click on the top of the main scene to insert a title (I called mine "Main Page").</p>
+                    <img src="images/35_mainPageTitle.png" alt="main page">
+                    <p>Moving back over to the table scene, we'll add a button so we can get back to the main page from the list page. In the Object library, search for "bar button" and drag a Bar Button Item object onto the top-left of the table scene.</p>
+                    <img src="images/36_allItemsItemButton.png" alt="item button">
+                    <p>In the Attributes inspector, select "Done" for the System Item field. This changes the button to read "Done".</p>
+                    <img src="images/37_doneButton.png" alt="done button">
+                    <p>Now we need to make the button actually do something. Go to the Assistant editor such that you can see the table scene in the storyboard and the table view controller class.</p>
+                    <img src="images/38_doneButtonAction.png" alt="done button action">
+                    <p>Control-click and drag from the Done button to just below the <code>// MARK: Navigation</code> comment. From the pop-up menu, select Action, enter a name for your function (I called mine "done"), select "UIBarButton", and click connect. This will create a function signature that is connected to your Done button.</p>
+                    <img src="images/39_doneFunction.png" alt="done function">
+                    <p>Currently, the section is commented out, so we need to remove the comment characters <code>/*</code> and <code>*/</code>. Then, inside the function, add the following: <code>dismissViewControllerAnimated(true, completion: nil)</code>.</p>
+                    <img src="images/40_doneFunctionComplete.png" alt="done function complete">
+                    <p>Now clicking the Done button will dismiss the list and go back to the main page.</p>
+                    <p>We've completed the navigation for the app, so next we will work on getting data from the API.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Section -->
+    <section id="loading" class="loading-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Getting Data and Adding Loading Animation</h1>
                 </div>
             </div>
         </div>

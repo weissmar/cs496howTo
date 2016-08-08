@@ -45,14 +45,28 @@ of those sections to manage the look and feel of the site. */
     background: #eee;
 }
 
-.services-section {
+.scenes-section {
     padding-bottom: 150px;
     padding-top: 150px;
     text-align: left;
     background: #fff;
 }
 
-.contact-section {
+.classes-section {
+    padding-bottom: 150px;
+    padding-top: 150px;
+    text-align: left;
+    background: #eee;
+}
+
+.navigation-section {
+    padding-bottom: 150px;
+    padding-top: 150px;
+    text-align: left;
+    background: #fff;
+}
+
+.loading-section {
     padding-bottom: 150px;
     padding-top: 150px;
     text-align: left;
@@ -60,5 +74,12 @@ of those sections to manage the look and feel of the site. */
 }
 
 img {
-    max-width: 40%;
+    max-height: 4in;
+    max-width: 75%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 5px;
+}
+
+p {
+    padding-top: 15px;
 }
